@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заполни пропуск</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Заполни пропуск</h1>
+
+        {% if options %}
+            <p class="sentence">{{ sentence.replace("____", "_____") }}</p>
+            <form method="POST" action="{{ url_for('check') }}">
+                <input type="hidden" name="correct" value="{{ correct }}">
+                <input type="hidden" name="sentence" value="{{ sentence }}">
+                {% for option in options %}
+                    <label>
+                        <input type="radio" name="answer" value="{{ option }}" required>
+                        {{ option }}
+                    </label><br>
+                {% endfor %}
+                <button type="submit">Проверить</button>
+            </form>
+        {% else %}
+            <p class="sentence">{{ sentence.replace("____", "<strong>" + user_answer + "</strong>") | safe }}</p>
+            {% if is_correct %}
+                <p class="result correct">Правильно!</p>
+            {% else %}
+                <p class="result incorrect">Неправильно. Правильный ответ: <strong>{{ correct }}</strong>.</p>
+            {% endif %}
+            <a href="{{ url_for('index') }}" class="btn">Сыграть ещё раз</a>
+        {% endif %}
+    </div>
+</body>
+</html>
